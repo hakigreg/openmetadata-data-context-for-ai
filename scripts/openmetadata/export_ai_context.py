@@ -64,13 +64,16 @@ def render_markdown(context: dict[str, Any]) -> str:
                 f"- Owners: {', '.join(table.get('owners', [])) or 'Unassigned'}",
                 f"- Tags: {', '.join(filter(None, table.get('tags', []))) or 'None'}",
                 "",
-                "| Column | Type | Description |",
-                "| --- | --- | --- |",
+                "| Column | Type | Classification and terms | Description |",
+                "| --- | --- | --- | --- |",
             ]
         )
         for column in table["columns"]:
             description = (column.get("description") or "").replace("|", "\\|")
-            lines.append(f"| `{column['name']}` | `{column['dataType']}` | {description} |")
+            tags = ", ".join(filter(None, column.get("tags", []))) or "None"
+            lines.append(
+                f"| `{column['name']}` | `{column['dataType']}` | {tags} | {description} |"
+            )
         lines.append("")
     return "\n".join(lines)
 
@@ -95,7 +98,7 @@ def main() -> int:
     }
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUTPUT_DIR / "context.json").write_text(json.dumps(context, indent=2) + "\n")
-    (OUTPUT_DIR / "context.md").write_text(render_markdown(context) + "\n")
+    (OUTPUT_DIR / "context.md").write_text(render_markdown(context).rstrip() + "\n")
     print(f"exported {len(tables)} governed assets to {OUTPUT_DIR}")
     return 0
 

@@ -24,6 +24,12 @@ COLLECTIONS = (
     ("dataProducts", "dataProducts"),
 )
 
+TAG_LABEL = {
+    "source": "Classification",
+    "labelType": "Manual",
+    "state": "Confirmed",
+}
+
 
 def upsert_foundation(client: OpenMetadataClient, spec: dict) -> None:
     for spec_key, endpoint in COLLECTIONS:
@@ -71,11 +77,85 @@ def curate_data_product(client: OpenMetadataClient, spec: dict) -> None:
             )
 
 
+def build_sensitivity_patch(
+    table: dict, column_assignments: dict[str, str]
+) -> list[dict]:
+    """Build an idempotent JSON Patch for mutually exclusive sensitivity tags."""
+    columns = table.get("columns", [])
+    indexes = {column["name"]: index for index, column in enumerate(columns)}
+    missing = sorted(set(column_assignments) - set(indexes))
+    if missing:
+        raise RuntimeError(
+            f"columns not found on {table.get('fullyQualifiedName')}: {', '.join(missing)}"
+        )
+
+    patch = []
+    for column_name, tag_fqn in column_assignments.items():
+        column_index = indexes[column_name]
+        column = columns[column_index]
+        classification = tag_fqn.split(".", 1)[0]
+        tags = column.get("tags", [])
+        sensitivity_indexes = [
+            index
+            for index, tag in enumerate(tags)
+            if tag.get("tagFQN", "").split(".", 1)[0] == classification
+        ]
+        has_target = any(tag.get("tagFQN") == tag_fqn for tag in tags)
+
+        for tag_index in reversed(sensitivity_indexes):
+            if tags[tag_index].get("tagFQN") != tag_fqn:
+                patch.append(
+                    {
+                        "op": "remove",
+                        "path": f"/columns/{column_index}/tags/{tag_index}",
+                    }
+                )
+
+        if not has_target:
+            label = {"tagFQN": tag_fqn, **TAG_LABEL}
+            if "tags" in column:
+                patch.append(
+                    {
+                        "op": "add",
+                        "path": f"/columns/{column_index}/tags/-",
+                        "value": label,
+                    }
+                )
+            else:
+                patch.append(
+                    {
+                        "op": "add",
+                        "path": f"/columns/{column_index}/tags",
+                        "value": [label],
+                    }
+                )
+    return patch
+
+
+def apply_sensitivity_assignments(client: OpenMetadataClient, spec: dict) -> None:
+    for assignment in spec.get("sensitivityAssignments", []):
+        table_fqn = assignment["table"]
+        table = client.get_by_name("tables", table_fqn, "columns,tags")
+        patch = build_sensitivity_patch(table, assignment["columns"])
+        if patch:
+            client.request(
+                "PATCH",
+                f"/v1/tables/{table['id']}",
+                patch,
+                content_type="application/json-patch+json",
+            )
+        print(
+            f"ensured classification for {table_fqn}: "
+            f"{len(assignment['columns'])} sensitive columns"
+        )
+
+
 def main() -> int:
     spec = json.loads(SPEC_PATH.read_text())
     client = OpenMetadataClient()
     upsert_foundation(client, spec)
     curate_data_product(client, spec)
+    apply_sensitivity_assignments(client, spec)
     return 0
 
 

@@ -2,11 +2,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts" / "openmetadata"))
+
+from bootstrap import build_sensitivity_patch
 
 
 class ProjectContractTest(unittest.TestCase):
@@ -27,6 +31,62 @@ class ProjectContractTest(unittest.TestCase):
             item for item in spec["dataProducts"] if item["name"] == "CommerceInsights"
         )
         self.assertEqual(product["ownerFqns"], ["CommerceAnalytics"])
+
+    def test_confidential_data_is_classified_across_the_dbt_lifecycle(self) -> None:
+        spec = json.loads((ROOT / "governance" / "catalog.json").read_text())
+        assignments = {
+            item["table"]: item["columns"]
+            for item in spec["sensitivityAssignments"]
+        }
+        for schema, table, columns in (
+            ("public", "customer", {"customer_id", "first_name", "last_name", "email"}),
+            ("staging", "stg_customers", {"customer_id", "first_name", "last_name", "email"}),
+            ("marts", "dim_customers", {"customer_id", "customer_name", "email"}),
+            ("marts", "mart_customer_360", {"customer_id", "customer_name"}),
+        ):
+            fqn = f"digital_commerce_postgres.chinook.{schema}.{table}"
+            self.assertEqual(set(assignments[fqn]), columns)
+            self.assertEqual(
+                set(assignments[fqn].values()),
+                {"DataSensitivity.Confidential"},
+            )
+
+    def test_sensitivity_patch_replaces_conflicts_and_preserves_dbt_tags(self) -> None:
+        table = {
+            "fullyQualifiedName": "service.database.schema.customers",
+            "columns": [
+                {
+                    "name": "email",
+                    "tags": [
+                        {"tagFQN": "DbtTags.personal_data"},
+                        {"tagFQN": "DataSensitivity.Internal"},
+                    ],
+                }
+            ],
+        }
+        patch = build_sensitivity_patch(
+            table, {"email": "DataSensitivity.Confidential"}
+        )
+        self.assertEqual(patch[0], {"op": "remove", "path": "/columns/0/tags/1"})
+        self.assertEqual(patch[1]["op"], "add")
+        self.assertEqual(patch[1]["value"]["tagFQN"], "DataSensitivity.Confidential")
+
+    def test_sensitivity_patch_is_idempotent(self) -> None:
+        table = {
+            "fullyQualifiedName": "service.database.schema.customers",
+            "columns": [
+                {
+                    "name": "email",
+                    "tags": [{"tagFQN": "DataSensitivity.Confidential"}],
+                }
+            ],
+        }
+        self.assertEqual(
+            build_sensitivity_patch(
+                table, {"email": "DataSensitivity.Confidential"}
+            ),
+            [],
+        )
 
     def test_no_jwt_is_committed_to_ingestion_configs(self) -> None:
         for config in (ROOT / "openmetadata" / "ingestion").glob("*.yaml"):

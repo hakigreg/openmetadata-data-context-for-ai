@@ -115,5 +115,64 @@
       "digital_commerce_postgres.chinook.marts.mart_catalog_performance",
       "digital_commerce_postgres.chinook.marts.mart_executive_kpis"
     ]
-  }
+  },
+  "sensitivityAssignments": [
+    {
+      "table": "digital_commerce_postgres.chinook.public.customer",
+      "columns": {
+        "customer_id": "DataSensitivity.Confidential",
+        "first_name": "DataSensitivity.Confidential",
+        "last_name": "DataSensitivity.Confidential",
+        "email": "DataSensitivity.Confidential"
+      }
+    },
+    {
+      "table": "digital_commerce_postgres.chinook.public.invoice",
+      "columns": {
+        "customer_id": "DataSensitivity.Confidential"
+      }
+    },
+    {
+      "table": "digital_commerce_postgres.chinook.staging.stg_customers",
+      "columns": {
+        "customer_id": "DataSensitivity.Confidential",
+        "first_name": "DataSensitivity.Confidential",
+        "last_name": "DataSensitivity.Confidential",
+        "email": "DataSensitivity.Confidential"
+      }
+    },
+    {
+      "table": "digital_commerce_postgres.chinook.staging.stg_invoices",
+      "columns": {
+        "customer_id": "DataSensitivity.Confidential"
+      }
+    },
+    {
+      "table": "digital_commerce_postgres.chinook.intermediate.int_sales_enriched",
+      "columns": {
+        "customer_id": "DataSensitivity.Confidential"
+      }
+    },
+    {
+      "table": "digital_commerce_postgres.chinook.marts.dim_customers",
+      "columns": {
+        "customer_id": "DataSensitivity.Confidential",
+        "customer_name": "DataSensitivity.Confidential",
+        "email": "DataSensitivity.Confidential"
+      }
+    },
+    {
+      "table": "digital_commerce_postgres.chinook.marts.fct_sales",
+      "columns": {
+        "customer_id": "DataSensitivity.Confidential"
+      }
+    },
+    {
+      "table": "digital_commerce_postgres.chinook.marts.mart_customer_360",
+      "columns": {
+        "customer_id": "DataSensitivity.Confidential",
+        "customer_name": "DataSensitivity.Confidential"
+      }
+    }
+  ]
 }

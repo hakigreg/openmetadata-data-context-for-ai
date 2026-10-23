@@ -42,10 +42,11 @@ class OpenMetadataClient:
         payload: dict[str, Any] | list[dict[str, Any]] | None = None,
         *,
         authenticated: bool = True,
+        content_type: str = "application/json",
     ) -> dict[str, Any] | list[Any] | str:
         headers = {"Accept": "application/json"}
         if payload is not None:
-            headers["Content-Type"] = "application/json"
+            headers["Content-Type"] = content_type
         if authenticated:
             headers["Authorization"] = f"Bearer {self.token}"
         request = urllib.request.Request(

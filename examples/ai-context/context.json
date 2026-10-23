@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0",
-  "generatedAt": "2026-10-23T20:51:02.067879+00:00",
+  "generatedAt": "2026-10-23T23:27:45.290728+00:00",
   "source": "OpenMetadata",
   "purpose": "Governed semantic context for analytics assistants and AI agents",
   "constraints": [
@@ -35,7 +35,8 @@
           "dataType": "integer",
           "description": "Stable customer key.",
           "tags": [
-            "Commerce.Customer.CustomerIdentifier"
+            "Commerce.Customer.CustomerIdentifier",
+            "DataSensitivity.Confidential"
           ]
         },
         {
@@ -43,6 +44,7 @@
           "dataType": "text",
           "description": "Customer display name.",
           "tags": [
+            "DataSensitivity.Confidential",
             "DbtTags.personal_data"
           ]
         },
@@ -57,6 +59,7 @@
           "dataType": "text",
           "description": "Customer contact email.",
           "tags": [
+            "DataSensitivity.Confidential",
             "DbtTags.contact_data",
             "DbtTags.personal_data"
           ]
@@ -202,7 +205,9 @@
           "name": "customer_id",
           "dataType": "integer",
           "description": "",
-          "tags": []
+          "tags": [
+            "DataSensitivity.Confidential"
+          ]
         },
         {
           "name": "product_id",
@@ -293,13 +298,17 @@
           "name": "customer_id",
           "dataType": "integer",
           "description": "",
-          "tags": []
+          "tags": [
+            "DataSensitivity.Confidential"
+          ]
         },
         {
           "name": "customer_name",
           "dataType": "text",
           "description": null,
-          "tags": []
+          "tags": [
+            "DataSensitivity.Confidential"
+          ]
         },
         {
           "name": "company_name",

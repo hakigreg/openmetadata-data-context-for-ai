@@ -18,7 +18,7 @@ owned, classified, tested, and reusable by people and AI systems**.
 - dbt descriptions, tests, tags, and table/column lineage
 - a consumer-aligned domain and an owned Data Product
 - business glossary terms connected to analytical assets
-- non-regulatory data sensitivity classification
+- non-regulatory data sensitivity classification applied across the dbt lifecycle
 - ownership, tiering, discoverability, and critical analytical marts
 - an API-derived AI Context Pack that contains metadata, not customer rows
 - repeatable local setup for Apple Silicon and Intel hosts
@@ -139,9 +139,10 @@ The export step reads governed table metadata from OpenMetadata and creates:
 - `artifacts/ai-context/context.json` for machines
 - `artifacts/ai-context/context.md` for human review and prompt inspection
 
-It includes descriptions, owners, domains, Data Products, classifications, and
-column definitions. It deliberately excludes warehouse records and does not
-require an LLM API key. This keeps OpenMetadata—not a chatbot—as the protagonist.
+It includes descriptions, owners, domains, Data Products, table and column
+classifications, and column definitions. It deliberately excludes warehouse
+records and does not require an LLM API key. This keeps OpenMetadata—not a
+chatbot—as the protagonist.
 
 A versioned example from a validated run is available as
 [`context.md`](examples/ai-context/context.md) and

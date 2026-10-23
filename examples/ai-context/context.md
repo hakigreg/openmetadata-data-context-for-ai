@@ -1,6 +1,6 @@
 # AI Context Pack: Commerce Insights
 
-Generated from OpenMetadata at `2026-10-23T20:51:02.067879+00:00`.
+Generated from OpenMetadata at `2026-10-23T23:27:45.290728+00:00`.
 
 This artifact is grounded in governed metadata. It contains no source rows or customer values.
 
@@ -13,17 +13,17 @@ Governed customer dimension for digital commerce analytics.
 - Owners: CommerceAnalytics
 - Tags: Commerce.Customer, DbtTags.certified_candidate, DbtTags.digital_commerce, Tier.Tier1
 
-| Column | Type | Description |
-| --- | --- | --- |
-| `customer_id` | `integer` | Stable customer key. |
-| `customer_name` | `text` | Customer display name. |
-| `company_name` | `text` |  |
-| `email` | `text` | Customer contact email. |
-| `city` | `text` |  |
-| `state` | `text` |  |
-| `country` | `text` | Customer country. |
-| `postal_code` | `text` |  |
-| `support_rep_id` | `integer` |  |
+| Column | Type | Classification and terms | Description |
+| --- | --- | --- | --- |
+| `customer_id` | `integer` | Commerce.Customer.CustomerIdentifier, DataSensitivity.Confidential | Stable customer key. |
+| `customer_name` | `text` | DataSensitivity.Confidential, DbtTags.personal_data | Customer display name. |
+| `company_name` | `text` | None |  |
+| `email` | `text` | DataSensitivity.Confidential, DbtTags.contact_data, DbtTags.personal_data | Customer contact email. |
+| `city` | `text` | None |  |
+| `state` | `text` | None |  |
+| `country` | `text` | None | Customer country. |
+| `postal_code` | `text` | None |  |
+| `support_rep_id` | `integer` | None |  |
 
 ## dim_products
 
@@ -34,16 +34,16 @@ Governed digital product dimension combining tracks, albums, artists, and genres
 - Owners: CommerceAnalytics
 - Tags: Commerce.DigitalProduct, DbtTags.certified_candidate, DbtTags.digital_commerce, Tier.Tier2
 
-| Column | Type | Description |
-| --- | --- | --- |
-| `product_id` | `integer` | Stable digital product key. |
-| `product_name` | `text` | Commercial track title. |
-| `album_title` | `text` |  |
-| `artist_name` | `text` |  |
-| `genre_name` | `text` |  |
-| `composer` | `character varying(220)` |  |
-| `duration_ms` | `integer` |  |
-| `list_price` | `numeric(12,2)` | Catalog unit price in the source currency. |
+| Column | Type | Classification and terms | Description |
+| --- | --- | --- | --- |
+| `product_id` | `integer` | None | Stable digital product key. |
+| `product_name` | `text` | None | Commercial track title. |
+| `album_title` | `text` | None |  |
+| `artist_name` | `text` | None |  |
+| `genre_name` | `text` | None |  |
+| `composer` | `character varying(220)` | None |  |
+| `duration_ms` | `integer` | None |  |
+| `list_price` | `numeric(12,2)` | None | Catalog unit price in the source currency. |
 
 ## fct_sales
 
@@ -54,21 +54,21 @@ Line-level digital commerce sales fact used as the governed analytical backbone.
 - Owners: CommerceAnalytics
 - Tags: Commerce.Order, Commerce.Revenue, DbtTags.certified_candidate, DbtTags.digital_commerce, Tier.Tier1
 
-| Column | Type | Description |
-| --- | --- | --- |
-| `sale_line_id` | `integer` | Stable order-line key. |
-| `invoice_id` | `integer` |  |
-| `customer_id` | `integer` |  |
-| `product_id` | `integer` |  |
-| `invoice_at` | `timestamp without time zone` |  |
-| `sale_date` | `date` |  |
-| `sale_month` | `date` |  |
-| `billing_country` | `text` |  |
-| `billing_state` | `text` |  |
-| `billing_city` | `text` |  |
-| `unit_price` | `numeric(12,2)` |  |
-| `quantity` | `integer` |  |
-| `revenue` | `numeric(12,2)` | Quantity multiplied by the realized unit price. |
+| Column | Type | Classification and terms | Description |
+| --- | --- | --- | --- |
+| `sale_line_id` | `integer` | None | Stable order-line key. |
+| `invoice_id` | `integer` | None |  |
+| `customer_id` | `integer` | DataSensitivity.Confidential |  |
+| `product_id` | `integer` | None |  |
+| `invoice_at` | `timestamp without time zone` | None |  |
+| `sale_date` | `date` | None |  |
+| `sale_month` | `date` | None |  |
+| `billing_country` | `text` | None |  |
+| `billing_state` | `text` | None |  |
+| `billing_city` | `text` | None |  |
+| `unit_price` | `numeric(12,2)` | None |  |
+| `quantity` | `integer` | None |  |
+| `revenue` | `numeric(12,2)` | Commerce.Revenue | Quantity multiplied by the realized unit price. |
 
 ## mart_customer_360
 
@@ -79,20 +79,20 @@ Customer-level commercial behavior and lifetime value metrics.
 - Owners: CommerceAnalytics
 - Tags: Commerce.CustomerLifetimeValue, DbtTags.certified_candidate, DbtTags.digital_commerce, Tier.Tier1
 
-| Column | Type | Description |
-| --- | --- | --- |
-| `customer_id` | `integer` |  |
-| `customer_name` | `text` |  |
-| `company_name` | `text` |  |
-| `country` | `text` |  |
-| `state` | `text` |  |
-| `city` | `text` |  |
-| `first_purchase_at` | `timestamp without time zone` |  |
-| `latest_purchase_at` | `timestamp without time zone` |  |
-| `order_count` | `bigint` |  |
-| `units_purchased` | `bigint` |  |
-| `lifetime_value` | `numeric(14,2)` | Total realized revenue attributed to a customer. |
-| `average_order_value` | `numeric(14,2)` |  |
+| Column | Type | Classification and terms | Description |
+| --- | --- | --- | --- |
+| `customer_id` | `integer` | DataSensitivity.Confidential |  |
+| `customer_name` | `text` | DataSensitivity.Confidential |  |
+| `company_name` | `text` | None |  |
+| `country` | `text` | None |  |
+| `state` | `text` | None |  |
+| `city` | `text` | None |  |
+| `first_purchase_at` | `timestamp without time zone` | None |  |
+| `latest_purchase_at` | `timestamp without time zone` | None |  |
+| `order_count` | `bigint` | None |  |
+| `units_purchased` | `bigint` | None |  |
+| `lifetime_value` | `numeric(14,2)` | None | Total realized revenue attributed to a customer. |
+| `average_order_value` | `numeric(14,2)` | None |  |
 
 ## mart_sales_performance
 
@@ -103,15 +103,15 @@ Monthly sales performance by billing country.
 - Owners: CommerceAnalytics
 - Tags: Commerce.Revenue, DbtTags.certified_candidate, DbtTags.digital_commerce, Tier.Tier1
 
-| Column | Type | Description |
-| --- | --- | --- |
-| `sale_month` | `date` |  |
-| `billing_country` | `text` |  |
-| `order_count` | `bigint` |  |
-| `active_customers` | `bigint` |  |
-| `units_sold` | `bigint` |  |
-| `revenue` | `numeric(14,2)` |  |
-| `average_order_value` | `numeric(14,2)` |  |
+| Column | Type | Classification and terms | Description |
+| --- | --- | --- | --- |
+| `sale_month` | `date` | None |  |
+| `billing_country` | `text` | None |  |
+| `order_count` | `bigint` | None |  |
+| `active_customers` | `bigint` | None |  |
+| `units_sold` | `bigint` | None |  |
+| `revenue` | `numeric(14,2)` | None |  |
+| `average_order_value` | `numeric(14,2)` | None |  |
 
 ## mart_catalog_performance
 
@@ -122,17 +122,17 @@ Product-level commercial performance across the complete digital catalog.
 - Owners: CommerceAnalytics
 - Tags: Commerce.DigitalProduct, Commerce.Revenue, DbtTags.certified_candidate, DbtTags.digital_commerce, Tier.Tier2
 
-| Column | Type | Description |
-| --- | --- | --- |
-| `product_id` | `integer` |  |
-| `product_name` | `text` |  |
-| `album_title` | `text` |  |
-| `artist_name` | `text` |  |
-| `genre_name` | `text` |  |
-| `order_count` | `bigint` |  |
-| `unique_customers` | `bigint` |  |
-| `units_sold` | `bigint` |  |
-| `revenue` | `numeric(14,2)` |  |
+| Column | Type | Classification and terms | Description |
+| --- | --- | --- | --- |
+| `product_id` | `integer` | None |  |
+| `product_name` | `text` | None |  |
+| `album_title` | `text` | None |  |
+| `artist_name` | `text` | None |  |
+| `genre_name` | `text` | None |  |
+| `order_count` | `bigint` | None |  |
+| `unique_customers` | `bigint` | None |  |
+| `units_sold` | `bigint` | None |  |
+| `revenue` | `numeric(14,2)` | None |  |
 
 ## mart_executive_kpis
 
@@ -143,12 +143,12 @@ Single-row executive summary of core digital commerce KPIs.
 - Owners: CommerceAnalytics
 - Tags: Commerce.AverageOrderValue, Commerce.Revenue, DbtTags.certified_candidate, DbtTags.digital_commerce, Tier.Tier1
 
-| Column | Type | Description |
-| --- | --- | --- |
-| `total_orders` | `bigint` |  |
-| `total_customers` | `bigint` |  |
-| `total_units_sold` | `bigint` |  |
-| `total_revenue` | `numeric(14,2)` |  |
-| `average_order_value` | `numeric(14,2)` |  |
-| `reporting_period_start` | `timestamp without time zone` |  |
-| `reporting_period_end` | `timestamp without time zone` |  |
+| Column | Type | Classification and terms | Description |
+| --- | --- | --- | --- |
+| `total_orders` | `bigint` | None |  |
+| `total_customers` | `bigint` | None |  |
+| `total_units_sold` | `bigint` | None |  |
+| `total_revenue` | `numeric(14,2)` | None |  |
+| `average_order_value` | `numeric(14,2)` | None |  |
+| `reporting_period_start` | `timestamp without time zone` | None |  |
+| `reporting_period_end` | `timestamp without time zone` | None |  |
