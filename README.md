@@ -44,6 +44,39 @@ The OpenMetadata application uses its official quickstart stack. The commerce
 warehouse is a separate PostgreSQL service, so platform state and business data
 have explicit boundaries.
 
+## Implementation evidence
+
+These screenshots were captured from the running local implementation after a
+clean end-to-end build. They are not mockups or generated images.
+
+### Governed Data Product
+
+![Commerce Insights Data Product with its domain and owner](docs/images/data-product-overview.jpg)
+
+`Commerce Insights` is assigned to the `Digital Commerce` domain, owned by the
+`Commerce Analytics` team, and curates seven governed analytical assets.
+
+<details>
+<summary>View the curated asset collection</summary>
+
+![Seven curated assets in the Commerce Insights Data Product](docs/images/data-product-assets.jpg)
+
+</details>
+
+### Lineage
+
+![Lineage from staging through dim_customers to mart_customer_360](docs/images/lineage-dim-customers.jpg)
+
+The lineage view connects the dbt lifecycle from `stg_customers` through the
+governed `dim_customers` dimension to the consumer-facing `mart_customer_360`.
+
+### Column profiling
+
+![Column-level profiling for dim_customers](docs/images/column-profiling.jpg)
+
+Column profiles expose null, uniqueness, distinctness, and value-count metrics
+without including customer values in this repository.
+
 ## Governed analytical products
 
 | Asset | Purpose |
@@ -110,6 +143,11 @@ It includes descriptions, owners, domains, Data Products, classifications, and
 column definitions. It deliberately excludes warehouse records and does not
 require an LLM API key. This keeps OpenMetadata—not a chatbot—as the protagonist.
 
+A versioned example from a validated run is available as
+[`context.md`](examples/ai-context/context.md) and
+[`context.json`](examples/ai-context/context.json). The example contains
+metadata only and can be inspected without running the stack.
+
 ## Repository map
 
 ```text
@@ -119,6 +157,7 @@ dbt/                         transformations, documentation, and tests
 governance/catalog.json      declarative governance model
 openmetadata/ingestion/      metadata, dbt, and profiler workflows
 scripts/openmetadata/        API bootstrap and AI context export
+examples/ai-context/         versioned metadata-only output example
 docs/                        architecture decisions and demo guidance
 tests/                       repository contract tests
 ```

@@ -1,0 +1,576 @@
+{
+  "schemaVersion": "1.0",
+  "generatedAt": "2026-10-23T20:51:02.067879+00:00",
+  "source": "OpenMetadata",
+  "purpose": "Governed semantic context for analytics assistants and AI agents",
+  "constraints": [
+    "Use metric definitions and column descriptions as authoritative context.",
+    "Do not infer regulatory status from sensitivity tags.",
+    "Do not expose customer-level values; this package contains metadata only."
+  ],
+  "tables": [
+    {
+      "fullyQualifiedName": "digital_commerce_postgres.chinook.marts.dim_customers",
+      "displayName": "dim_customers",
+      "description": "Governed customer dimension for digital commerce analytics.",
+      "tableType": "Regular",
+      "owners": [
+        "CommerceAnalytics"
+      ],
+      "domains": [
+        "DigitalCommerce"
+      ],
+      "dataProducts": [
+        "CommerceInsights"
+      ],
+      "tags": [
+        "Commerce.Customer",
+        "DbtTags.certified_candidate",
+        "DbtTags.digital_commerce",
+        "Tier.Tier1"
+      ],
+      "columns": [
+        {
+          "name": "customer_id",
+          "dataType": "integer",
+          "description": "Stable customer key.",
+          "tags": [
+            "Commerce.Customer.CustomerIdentifier"
+          ]
+        },
+        {
+          "name": "customer_name",
+          "dataType": "text",
+          "description": "Customer display name.",
+          "tags": [
+            "DbtTags.personal_data"
+          ]
+        },
+        {
+          "name": "company_name",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "email",
+          "dataType": "text",
+          "description": "Customer contact email.",
+          "tags": [
+            "DbtTags.contact_data",
+            "DbtTags.personal_data"
+          ]
+        },
+        {
+          "name": "city",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "state",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "country",
+          "dataType": "text",
+          "description": "Customer country.",
+          "tags": []
+        },
+        {
+          "name": "postal_code",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "support_rep_id",
+          "dataType": "integer",
+          "description": null,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "fullyQualifiedName": "digital_commerce_postgres.chinook.marts.dim_products",
+      "displayName": "dim_products",
+      "description": "Governed digital product dimension combining tracks, albums, artists, and genres.",
+      "tableType": "Regular",
+      "owners": [
+        "CommerceAnalytics"
+      ],
+      "domains": [
+        "DigitalCommerce"
+      ],
+      "dataProducts": [
+        "CommerceInsights"
+      ],
+      "tags": [
+        "Commerce.DigitalProduct",
+        "DbtTags.certified_candidate",
+        "DbtTags.digital_commerce",
+        "Tier.Tier2"
+      ],
+      "columns": [
+        {
+          "name": "product_id",
+          "dataType": "integer",
+          "description": "Stable digital product key.",
+          "tags": []
+        },
+        {
+          "name": "product_name",
+          "dataType": "text",
+          "description": "Commercial track title.",
+          "tags": []
+        },
+        {
+          "name": "album_title",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "artist_name",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "genre_name",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "composer",
+          "dataType": "character varying(220)",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "duration_ms",
+          "dataType": "integer",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "list_price",
+          "dataType": "numeric(12,2)",
+          "description": "Catalog unit price in the source currency.",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "fullyQualifiedName": "digital_commerce_postgres.chinook.marts.fct_sales",
+      "displayName": "fct_sales",
+      "description": "Line-level digital commerce sales fact used as the governed analytical backbone.",
+      "tableType": "Regular",
+      "owners": [
+        "CommerceAnalytics"
+      ],
+      "domains": [
+        "DigitalCommerce"
+      ],
+      "dataProducts": [
+        "CommerceInsights"
+      ],
+      "tags": [
+        "Commerce.Order",
+        "Commerce.Revenue",
+        "DbtTags.certified_candidate",
+        "DbtTags.digital_commerce",
+        "Tier.Tier1"
+      ],
+      "columns": [
+        {
+          "name": "sale_line_id",
+          "dataType": "integer",
+          "description": "Stable order-line key.",
+          "tags": []
+        },
+        {
+          "name": "invoice_id",
+          "dataType": "integer",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "customer_id",
+          "dataType": "integer",
+          "description": "",
+          "tags": []
+        },
+        {
+          "name": "product_id",
+          "dataType": "integer",
+          "description": "",
+          "tags": []
+        },
+        {
+          "name": "invoice_at",
+          "dataType": "timestamp without time zone",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "sale_date",
+          "dataType": "date",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "sale_month",
+          "dataType": "date",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "billing_country",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "billing_state",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "billing_city",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "unit_price",
+          "dataType": "numeric(12,2)",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "quantity",
+          "dataType": "integer",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "revenue",
+          "dataType": "numeric(12,2)",
+          "description": "Quantity multiplied by the realized unit price.",
+          "tags": [
+            "Commerce.Revenue"
+          ]
+        }
+      ]
+    },
+    {
+      "fullyQualifiedName": "digital_commerce_postgres.chinook.marts.mart_customer_360",
+      "displayName": "mart_customer_360",
+      "description": "Customer-level commercial behavior and lifetime value metrics.",
+      "tableType": "Regular",
+      "owners": [
+        "CommerceAnalytics"
+      ],
+      "domains": [
+        "DigitalCommerce"
+      ],
+      "dataProducts": [
+        "CommerceInsights"
+      ],
+      "tags": [
+        "Commerce.CustomerLifetimeValue",
+        "DbtTags.certified_candidate",
+        "DbtTags.digital_commerce",
+        "Tier.Tier1"
+      ],
+      "columns": [
+        {
+          "name": "customer_id",
+          "dataType": "integer",
+          "description": "",
+          "tags": []
+        },
+        {
+          "name": "customer_name",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "company_name",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "country",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "state",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "city",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "first_purchase_at",
+          "dataType": "timestamp without time zone",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "latest_purchase_at",
+          "dataType": "timestamp without time zone",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "order_count",
+          "dataType": "bigint",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "units_purchased",
+          "dataType": "bigint",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "lifetime_value",
+          "dataType": "numeric(14,2)",
+          "description": "Total realized revenue attributed to a customer.",
+          "tags": []
+        },
+        {
+          "name": "average_order_value",
+          "dataType": "numeric(14,2)",
+          "description": null,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "fullyQualifiedName": "digital_commerce_postgres.chinook.marts.mart_sales_performance",
+      "displayName": "mart_sales_performance",
+      "description": "Monthly sales performance by billing country.",
+      "tableType": "Regular",
+      "owners": [
+        "CommerceAnalytics"
+      ],
+      "domains": [
+        "DigitalCommerce"
+      ],
+      "dataProducts": [
+        "CommerceInsights"
+      ],
+      "tags": [
+        "Commerce.Revenue",
+        "DbtTags.certified_candidate",
+        "DbtTags.digital_commerce",
+        "Tier.Tier1"
+      ],
+      "columns": [
+        {
+          "name": "sale_month",
+          "dataType": "date",
+          "description": "",
+          "tags": []
+        },
+        {
+          "name": "billing_country",
+          "dataType": "text",
+          "description": "",
+          "tags": []
+        },
+        {
+          "name": "order_count",
+          "dataType": "bigint",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "active_customers",
+          "dataType": "bigint",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "units_sold",
+          "dataType": "bigint",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "revenue",
+          "dataType": "numeric(14,2)",
+          "description": "",
+          "tags": []
+        },
+        {
+          "name": "average_order_value",
+          "dataType": "numeric(14,2)",
+          "description": null,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "fullyQualifiedName": "digital_commerce_postgres.chinook.marts.mart_catalog_performance",
+      "displayName": "mart_catalog_performance",
+      "description": "Product-level commercial performance across the complete digital catalog.",
+      "tableType": "Regular",
+      "owners": [
+        "CommerceAnalytics"
+      ],
+      "domains": [
+        "DigitalCommerce"
+      ],
+      "dataProducts": [
+        "CommerceInsights"
+      ],
+      "tags": [
+        "Commerce.DigitalProduct",
+        "Commerce.Revenue",
+        "DbtTags.certified_candidate",
+        "DbtTags.digital_commerce",
+        "Tier.Tier2"
+      ],
+      "columns": [
+        {
+          "name": "product_id",
+          "dataType": "integer",
+          "description": "",
+          "tags": []
+        },
+        {
+          "name": "product_name",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "album_title",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "artist_name",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "genre_name",
+          "dataType": "text",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "order_count",
+          "dataType": "bigint",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "unique_customers",
+          "dataType": "bigint",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "units_sold",
+          "dataType": "bigint",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "revenue",
+          "dataType": "numeric(14,2)",
+          "description": "",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "fullyQualifiedName": "digital_commerce_postgres.chinook.marts.mart_executive_kpis",
+      "displayName": "mart_executive_kpis",
+      "description": "Single-row executive summary of core digital commerce KPIs.",
+      "tableType": "Regular",
+      "owners": [
+        "CommerceAnalytics"
+      ],
+      "domains": [
+        "DigitalCommerce"
+      ],
+      "dataProducts": [
+        "CommerceInsights"
+      ],
+      "tags": [
+        "Commerce.AverageOrderValue",
+        "Commerce.Revenue",
+        "DbtTags.certified_candidate",
+        "DbtTags.digital_commerce",
+        "Tier.Tier1"
+      ],
+      "columns": [
+        {
+          "name": "total_orders",
+          "dataType": "bigint",
+          "description": "",
+          "tags": []
+        },
+        {
+          "name": "total_customers",
+          "dataType": "bigint",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "total_units_sold",
+          "dataType": "bigint",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "total_revenue",
+          "dataType": "numeric(14,2)",
+          "description": "",
+          "tags": []
+        },
+        {
+          "name": "average_order_value",
+          "dataType": "numeric(14,2)",
+          "description": "",
+          "tags": []
+        },
+        {
+          "name": "reporting_period_start",
+          "dataType": "timestamp without time zone",
+          "description": null,
+          "tags": []
+        },
+        {
+          "name": "reporting_period_end",
+          "dataType": "timestamp without time zone",
+          "description": null,
+          "tags": []
+        }
+      ]
+    }
+  ]
+}

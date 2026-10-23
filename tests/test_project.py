@@ -54,6 +54,28 @@ class ProjectContractTest(unittest.TestCase):
         self.assertIn("localhost:8585/api/v1/system/version", wait_script)
         self.assertNotIn("localhost:8586", wait_script)
 
+    def test_versioned_context_example_matches_governed_assets(self) -> None:
+        spec = json.loads((ROOT / "governance" / "catalog.json").read_text())
+        example = json.loads(
+            (ROOT / "examples" / "ai-context" / "context.json").read_text()
+        )
+        expected = set(spec["dataProductAssets"]["CommerceInsights"])
+        actual = {table["fullyQualifiedName"] for table in example["tables"]}
+        self.assertEqual(actual, expected)
+        self.assertEqual(example["source"], "OpenMetadata")
+
+    def test_portfolio_screenshots_are_real_jpeg_files(self) -> None:
+        image_dir = ROOT / "docs" / "images"
+        for name in (
+            "data-product-overview.jpg",
+            "data-product-assets.jpg",
+            "lineage-dim-customers.jpg",
+            "column-profiling.jpg",
+        ):
+            data = (image_dir / name).read_bytes()
+            self.assertTrue(data.startswith(b"\xff\xd8\xff"), name)
+            self.assertGreater(len(data), 20_000, name)
+
 
 if __name__ == "__main__":
     unittest.main()
