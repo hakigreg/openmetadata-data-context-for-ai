@@ -44,6 +44,29 @@ The OpenMetadata application uses its official quickstart stack. The commerce
 warehouse is a separate PostgreSQL service, so platform state and business data
 have explicit boundaries.
 
+## Metadata provenance
+
+OpenMetadata is the consolidation and consumption layer; each metadata signal
+keeps a traceable source in the repository or in the running warehouse.
+
+| Metadata visible in OpenMetadata | Origin and authority | How it is published |
+| --- | --- | --- |
+| Schemas, tables, views, columns, and data types | Live PostgreSQL system catalogs | The [PostgreSQL metadata workflow](openmetadata/ingestion/postgres.yaml) discovers the `public`, `staging`, `intermediate`, and `marts` schemas. |
+| Model and column descriptions | dbt YAML documentation under [`dbt/models/`](dbt/models/) | `dbt docs generate` writes `manifest.json`; the [dbt workflow](openmetadata/ingestion/dbt.yaml) imports it. |
+| Table and column lineage | dbt `source()` and `ref()` dependencies in the compiled manifest | The same dbt workflow translates the dependency graph into OpenMetadata lineage. |
+| Test definitions and latest results | dbt `data_tests` plus the executed `run_results.json` | `dbt test` records the results and the dbt workflow publishes both test cases and status. |
+| Technical dbt tags | Model-folder configuration and column tags in the dbt project | The dbt workflow imports them under the `DbtTags` classification. |
+| Domain, owners, tiers, and glossary assignments on marts | `meta.openmetadata` declarations in [`dbt/models/marts/marts.yml`](dbt/models/marts/marts.yml) | The dbt workflow resolves those declarations against governance entities already present in OpenMetadata. |
+| Domain, team, Data Product, glossary, and sensitivity definitions | Declarative [governance catalog](governance/catalog.json) | The idempotent [governance bootstrap](scripts/openmetadata/bootstrap.py) creates or updates them through the OpenMetadata API. |
+| Data Product asset membership | Curated table FQNs in `dataProductAssets` in the governance catalog | The governance bootstrap resolves each FQN and adds the seven tables to `Commerce Insights`. |
+| Column sensitivity assignments | Explicit `sensitivityAssignments` in the governance catalog | The governance bootstrap applies confirmed `DataSensitivity` tags through JSON Patch while preserving dbt tags. |
+| Column profiles | Metrics computed from live mart tables in PostgreSQL | The [profiler workflow](openmetadata/ingestion/profiler.yaml) queries governed marts and publishes aggregate profiles. |
+| AI Context Pack | Governed entities read back from the OpenMetadata API | The [context exporter](scripts/openmetadata/export_ai_context.py) emits metadata-only JSON and Markdown, without source rows. |
+
+This separation makes authorship observable: technical facts come from the
+platforms that produce them, while business semantics and curation remain
+explicit, reviewable decisions in version control.
+
 ## Implementation evidence
 
 These screenshots were captured from the running local implementation after a

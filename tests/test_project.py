@@ -134,6 +134,19 @@ class ProjectContractTest(unittest.TestCase):
         self.assertEqual(actual, expected)
         self.assertEqual(example["source"], "OpenMetadata")
 
+    def test_readme_documents_metadata_provenance(self) -> None:
+        readme = (ROOT / "README.md").read_text()
+        self.assertIn("## Metadata provenance", readme)
+        for source in (
+            "openmetadata/ingestion/postgres.yaml",
+            "openmetadata/ingestion/dbt.yaml",
+            "openmetadata/ingestion/profiler.yaml",
+            "governance/catalog.json",
+            "scripts/openmetadata/bootstrap.py",
+            "scripts/openmetadata/export_ai_context.py",
+        ):
+            self.assertIn(source, readme)
+
     def test_portfolio_screenshots_are_real_jpeg_files(self) -> None:
         image_dir = ROOT / "docs" / "images"
         for name in (
