@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -eu
 
-health_url="${OPENMETADATA_HEALTH_URL:-http://localhost:8586/healthcheck}"
+health_url="${OPENMETADATA_HEALTH_URL:-http://localhost:8585/api/v1/system/version}"
 attempts="${OPENMETADATA_WAIT_ATTEMPTS:-60}"
 
 attempt=1

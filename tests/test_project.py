@@ -49,6 +49,11 @@ class ProjectContractTest(unittest.TestCase):
         self.assertIn("mysql:\n    ports: !override []", compose)
         self.assertIn("elasticsearch:\n    ports: !override []", compose)
 
+    def test_readiness_check_uses_the_public_api_port(self) -> None:
+        wait_script = (ROOT / "scripts" / "wait-for-openmetadata.sh").read_text()
+        self.assertIn("localhost:8585/api/v1/system/version", wait_script)
+        self.assertNotIn("localhost:8586", wait_script)
+
 
 if __name__ == "__main__":
     unittest.main()
