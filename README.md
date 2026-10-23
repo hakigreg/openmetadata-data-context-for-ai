@@ -1,5 +1,9 @@
 # OpenMetadata Data Context for AI
 
+[![CI](https://github.com/hakigreg/openmetadata-data-context-for-ai/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/hakigreg/openmetadata-data-context-for-ai/actions/workflows/ci.yml)
+[![OpenMetadata](https://img.shields.io/badge/OpenMetadata-2.0.2-7147E8)](https://github.com/open-metadata/OpenMetadata/releases/tag/2.0.2-release)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A reproducible portfolio implementation of OpenMetadata that turns a small
 digital commerce warehouse into governed, AI-ready data context.
 
