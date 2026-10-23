@@ -7,7 +7,7 @@ OPENMETADATA_VERSION ?= 2.0.2
 OPENMETADATA_COMPOSE := .generated/openmetadata/docker-compose.yml
 COMPOSE := docker compose --project-directory . -f $(OPENMETADATA_COMPOSE) -f compose.yaml
 
-.PHONY: help setup compose-config up wait down reset dbt-build dbt-docs ingest-metadata reindex-search ingest-dbt profile governance-bootstrap context-export token validate demo
+.PHONY: help setup compose-config up wait down reset dbt-build dbt-docs dbt-test ingest-metadata reindex-search ingest-dbt reindex-tests profile governance-bootstrap context-export token validate demo
 
 help:
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "%-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -38,6 +38,9 @@ dbt-build: setup ## Build and test every dbt model
 dbt-docs: setup ## Generate dbt manifest and catalog artifacts
 	@$(COMPOSE) --profile tools run --rm dbt docs generate
 
+dbt-test: setup ## Refresh dbt test results after documentation generation
+	@$(COMPOSE) --profile tools run --rm dbt test
+
 token: ## Print a temporary local OpenMetadata access token
 	@python3 scripts/openmetadata/token.py
 
@@ -57,6 +60,9 @@ ingest-dbt: setup ## Ingest dbt descriptions, tests, tags, owners, and lineage
 	$(COMPOSE) exec -T -e OPENMETADATA_JWT_TOKEN="$$token" \
 	  ingestion metadata ingest -c /workspace/openmetadata/ingestion/dbt.yaml
 
+reindex-tests: ## Ensure dbt test cases and results are visible in Data Quality
+	@python3 scripts/openmetadata/reindex_test_cases.py
+
 profile: setup ## Profile governed marts and publish metrics to OpenMetadata
 	@token="$$(python3 scripts/openmetadata/token.py)"; \
 	$(COMPOSE) exec -T \
@@ -74,5 +80,5 @@ context-export: ## Export an AI-ready context package from governed OpenMetadata
 validate: compose-config ## Run fast, non-destructive project validation
 	@python3 -m unittest discover -s tests -v
 
-demo: up wait dbt-build dbt-docs ingest-metadata reindex-search governance-bootstrap ingest-dbt profile context-export ## Build the end-to-end governed metadata demo
+demo: up wait dbt-build dbt-docs dbt-test ingest-metadata reindex-search governance-bootstrap ingest-dbt reindex-tests profile context-export ## Build the end-to-end governed metadata demo
 	@printf 'Base demo ready. Open http://localhost:8585\n'

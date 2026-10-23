@@ -77,6 +77,21 @@ governed `dim_customers` dimension to the consumer-facing `mart_customer_360`.
 Column profiles expose null, uniqueness, distinctness, and value-count metrics
 without including customer values in this repository.
 
+### Data quality from dbt
+
+![Successful dbt quality tests in OpenMetadata](docs/images/data-quality-tests.jpg)
+
+OpenMetadata imports dbt test definitions and their latest execution results,
+making trust signals visible next to the governed analytical asset.
+
+### Column governance
+
+![Sensitivity classification and glossary term on governed columns](docs/images/column-governance.jpg)
+
+Customer identifiers and direct identifiers carry the native
+`DataSensitivity.Confidential` classification across the dbt lifecycle. The
+same column can retain its business glossary term and technical dbt tags.
+
 ## Governed analytical products
 
 | Asset | Purpose |
@@ -120,9 +135,11 @@ Useful incremental commands:
 make up                    # start the stack
 make dbt-build             # build and test the warehouse
 make dbt-docs              # generate dbt artifacts
+make dbt-test              # refresh executed test results after dbt docs
 make ingest-metadata       # ingest PostgreSQL metadata
 make governance-bootstrap  # create governance entities and Data Product
 make ingest-dbt            # publish dbt lineage, tests, and documentation
+make reindex-tests         # make dbt test results visible in Data Quality
 make profile               # profile governed marts
 make context-export        # generate artifacts/ai-context/
 make validate              # run fast project checks

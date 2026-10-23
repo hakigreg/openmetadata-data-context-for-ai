@@ -101,6 +101,16 @@ class ProjectContractTest(unittest.TestCase):
             makefile,
         )
 
+    def test_demo_preserves_and_indexes_executed_dbt_test_results(self) -> None:
+        makefile = (ROOT / "Makefile").read_text()
+        self.assertIn("dbt-build dbt-docs dbt-test ingest-metadata", makefile)
+        self.assertIn("ingest-dbt reindex-tests profile", makefile)
+        reindex_script = (
+            ROOT / "scripts" / "openmetadata" / "reindex_test_cases.py"
+        ).read_text()
+        self.assertIn("test_case_search_index", reindex_script)
+        self.assertIn('"type": "testCase"', reindex_script)
+
     def test_compose_overrides_restrict_host_access(self) -> None:
         compose = (ROOT / "compose.yaml").read_text()
         self.assertIn('127.0.0.1:${COMMERCE_DB_HOST_PORT:-55432}:5432', compose)
@@ -131,6 +141,8 @@ class ProjectContractTest(unittest.TestCase):
             "data-product-assets.jpg",
             "lineage-dim-customers.jpg",
             "column-profiling.jpg",
+            "column-governance.jpg",
+            "data-quality-tests.jpg",
         ):
             data = (image_dir / name).read_bytes()
             self.assertTrue(data.startswith(b"\xff\xd8\xff"), name)
