@@ -14,7 +14,7 @@ from client import OpenMetadataClient
 ROOT = Path(__file__).resolve().parents[2]
 SPEC_PATH = ROOT / "governance" / "catalog.json"
 OUTPUT_DIR = ROOT / "artifacts" / "ai-context"
-FIELDS = "owners,tags,columns,domain,dataProducts"
+FIELDS = "owners,tags,columns,domains,dataProducts"
 
 
 def compact_table(table: dict[str, Any]) -> dict[str, Any]:
@@ -24,7 +24,9 @@ def compact_table(table: dict[str, Any]) -> dict[str, Any]:
         "description": table.get("description"),
         "tableType": table.get("tableType"),
         "owners": [owner.get("fullyQualifiedName") for owner in table.get("owners", [])],
-        "domain": (table.get("domain") or {}).get("fullyQualifiedName"),
+        "domains": [
+            domain.get("fullyQualifiedName") for domain in table.get("domains", [])
+        ],
         "dataProducts": [
             product.get("fullyQualifiedName") for product in table.get("dataProducts", [])
         ],
@@ -58,7 +60,7 @@ def render_markdown(context: dict[str, Any]) -> str:
                 table.get("description") or "No description available.",
                 "",
                 f"- FQN: `{table['fullyQualifiedName']}`",
-                f"- Domain: `{table.get('domain')}`",
+                f"- Domains: {', '.join(table.get('domains', [])) or 'Unassigned'}",
                 f"- Owners: {', '.join(table.get('owners', [])) or 'Unassigned'}",
                 f"- Tags: {', '.join(filter(None, table.get('tags', []))) or 'None'}",
                 "",
@@ -75,7 +77,8 @@ def render_markdown(context: dict[str, Any]) -> str:
 
 def main() -> int:
     spec = json.loads(SPEC_PATH.read_text())
-    table_fqns = spec["dataProductAssets"]["DigitalCommerce.CommerceInsights"]
+    product_name = spec["dataProducts"][0]["name"]
+    table_fqns = spec["dataProductAssets"][product_name]
     client = OpenMetadataClient()
     tables = [compact_table(client.get_by_name("tables", fqn, FIELDS)) for fqn in table_fqns]
     context = {

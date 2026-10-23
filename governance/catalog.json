@@ -101,11 +101,12 @@
       "name": "CommerceInsights",
       "displayName": "Commerce Insights",
       "description": "Curated customer, sales, catalog, and executive KPI assets for analytics and AI consumers.",
-      "domains": ["DigitalCommerce"]
+      "domains": ["DigitalCommerce"],
+      "ownerFqns": ["CommerceAnalytics"]
     }
   ],
   "dataProductAssets": {
-    "DigitalCommerce.CommerceInsights": [
+    "CommerceInsights": [
       "digital_commerce_postgres.chinook.marts.dim_customers",
       "digital_commerce_postgres.chinook.marts.dim_products",
       "digital_commerce_postgres.chinook.marts.fct_sales",

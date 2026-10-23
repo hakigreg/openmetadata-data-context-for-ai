@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from urllib.parse import quote
 
 from client import OpenMetadataClient
 
@@ -27,7 +28,17 @@ COLLECTIONS = (
 def upsert_foundation(client: OpenMetadataClient, spec: dict) -> None:
     for spec_key, endpoint in COLLECTIONS:
         for entity in spec.get(spec_key, []):
-            result = client.request("PUT", f"/v1/{endpoint}", entity)
+            payload = dict(entity)
+            owner_fqns = payload.pop("ownerFqns", [])
+            if endpoint == "dataProducts" and owner_fqns:
+                payload["owners"] = [
+                    {
+                        "id": client.get_by_name("teams", owner_fqn)["id"],
+                        "type": "team",
+                    }
+                    for owner_fqn in owner_fqns
+                ]
+            result = client.request("PUT", f"/v1/{endpoint}", payload)
             print(f"upserted {endpoint}: {result.get('fullyQualifiedName', result.get('name'))}")
 
 
@@ -49,7 +60,7 @@ def curate_data_product(client: OpenMetadataClient, spec: dict) -> None:
         if assets:
             client.request(
                 "PUT",
-                f"/v1/dataProducts/{product['id']}/assets/add",
+                f"/v1/dataProducts/{quote(product['fullyQualifiedName'], safe='')}/assets/add",
                 {"assets": assets},
             )
             print(f"curated {product_fqn}: {len(assets)} assets")

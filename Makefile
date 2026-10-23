@@ -7,7 +7,7 @@ OPENMETADATA_VERSION ?= 2.0.2
 OPENMETADATA_COMPOSE := .generated/openmetadata/docker-compose.yml
 COMPOSE := docker compose --project-directory . -f $(OPENMETADATA_COMPOSE) -f compose.yaml
 
-.PHONY: help setup compose-config up wait down reset dbt-build dbt-docs ingest-metadata ingest-dbt profile governance-bootstrap context-export token validate demo
+.PHONY: help setup compose-config up wait down reset dbt-build dbt-docs ingest-metadata reindex-search ingest-dbt profile governance-bootstrap context-export token validate demo
 
 help:
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "%-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -48,6 +48,9 @@ ingest-metadata: setup ## Ingest PostgreSQL schemas, tables, and views into Open
 	  -e COMMERCE_DB_PASSWORD="$${COMMERCE_DB_PASSWORD}" \
 	  ingestion metadata ingest -c /workspace/openmetadata/ingestion/postgres.yaml
 
+reindex-search: ## Ensure ingested tables are searchable before dbt enrichment
+	@python3 scripts/openmetadata/reindex_tables.py
+
 ingest-dbt: setup ## Ingest dbt descriptions, tests, tags, owners, and lineage
 	@token="$$(python3 scripts/openmetadata/token.py)"; \
 	$(COMPOSE) exec -T -e OPENMETADATA_JWT_TOKEN="$$token" \
@@ -70,5 +73,5 @@ context-export: ## Export an AI-ready context package from governed OpenMetadata
 validate: compose-config ## Run fast, non-destructive project validation
 	@python3 -m unittest discover -s tests -v
 
-demo: up wait dbt-build dbt-docs ingest-metadata governance-bootstrap ingest-dbt profile context-export ## Build the end-to-end governed metadata demo
+demo: up wait dbt-build dbt-docs ingest-metadata reindex-search governance-bootstrap ingest-dbt profile context-export ## Build the end-to-end governed metadata demo
 	@printf 'Base demo ready. Open http://localhost:8585\n'

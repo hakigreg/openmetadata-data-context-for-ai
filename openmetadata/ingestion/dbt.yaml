@@ -6,7 +6,6 @@ source:
       type: DBT
       dbtConfigSource:
         dbtConfigType: local
-        dbtCatalogFilePath: /workspace/dbt/target/catalog.json
         dbtManifestFilePath: /workspace/dbt/target/manifest.json
         dbtRunResultsFilePath: /workspace/dbt/target/run_results.json
       dbtUpdateDescriptions: true

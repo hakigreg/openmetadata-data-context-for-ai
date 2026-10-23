@@ -39,10 +39,10 @@ class OpenMetadataClient:
         self,
         method: str,
         path: str,
-        payload: dict[str, Any] | None = None,
+        payload: dict[str, Any] | list[dict[str, Any]] | None = None,
         *,
         authenticated: bool = True,
-    ) -> dict[str, Any]:
+    ) -> dict[str, Any] | list[Any] | str:
         headers = {"Accept": "application/json"}
         if payload is not None:
             headers["Content-Type"] = "application/json"
@@ -60,9 +60,17 @@ class OpenMetadataClient:
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode(errors="replace")
             raise RuntimeError(f"{method} {path} failed ({exc.code}): {detail}") from exc
-        return json.loads(body) if body else {}
+        if not body:
+            return {}
+        try:
+            return json.loads(body)
+        except json.JSONDecodeError:
+            return body.decode(errors="replace")
 
     def get_by_name(self, collection: str, fqn: str, fields: str = "") -> dict[str, Any]:
         encoded_fqn = urllib.parse.quote(fqn, safe="")
         suffix = f"?fields={urllib.parse.quote(fields)}" if fields else ""
-        return self.request("GET", f"/v1/{collection}/name/{encoded_fqn}{suffix}")
+        response = self.request("GET", f"/v1/{collection}/name/{encoded_fqn}{suffix}")
+        if not isinstance(response, dict):
+            raise RuntimeError(f"Unexpected response for {collection} {fqn}")
+        return response

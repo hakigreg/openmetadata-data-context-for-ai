@@ -25,10 +25,7 @@ source:
           - ^mart_.*
 processor:
   type: orm-profiler
-  config:
-    tableConfig:
-      profileSampleType: PERCENTAGE
-      profileSample: 100
+  config: {}
 sink:
   type: metadata-rest
   config: {}
