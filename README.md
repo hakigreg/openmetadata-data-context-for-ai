@@ -58,7 +58,7 @@ have explicit boundaries.
 
 ## Prerequisites
 
-- Docker Desktop or Docker Engine with Compose v2
+- Docker Desktop or Docker Engine with Compose v2.24.4+
 - `make`, `curl`, and Python 3.10+
 - at least 4 CPUs and 6 GiB assigned to Docker; 10–12 GiB is recommended
 
@@ -129,6 +129,9 @@ This is a local portfolio environment, not a production deployment. It does not
 claim HIPAA, PCI DSS, or any other regulatory compliance. It demonstrates data
 privacy concepts through semantic classification without turning the project
 into a compliance implementation.
+
+All host-accessible services bind to the loopback interface. The platform
+database and search engine remain available only inside the Docker network.
 
 For production, replace quickstart credentials and keys, use a dedicated bot
 with least privilege, externalize secrets, use durable managed dependencies,

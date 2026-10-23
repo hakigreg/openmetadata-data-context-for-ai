@@ -41,6 +41,14 @@ class ProjectContractTest(unittest.TestCase):
             makefile,
         )
 
+    def test_compose_overrides_restrict_host_access(self) -> None:
+        compose = (ROOT / "compose.yaml").read_text()
+        self.assertIn('127.0.0.1:${COMMERCE_DB_HOST_PORT:-55432}:5432', compose)
+        self.assertIn('127.0.0.1:8080:8080', compose)
+        self.assertIn('127.0.0.1:8585:8585', compose)
+        self.assertIn("mysql:\n    ports: !override []", compose)
+        self.assertIn("elasticsearch:\n    ports: !override []", compose)
+
 
 if __name__ == "__main__":
     unittest.main()

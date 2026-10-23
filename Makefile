@@ -18,6 +18,7 @@ setup: ## Prepare local configuration and fetch the pinned official OpenMetadata
 
 compose-config: setup ## Render and validate the merged Docker Compose configuration
 	@$(COMPOSE) config --quiet
+	@$(COMPOSE) config --format json | python3 scripts/validate_compose_network.py
 
 up: setup ## Start OpenMetadata and the digital commerce PostgreSQL warehouse
 	@$(COMPOSE) up --detach
