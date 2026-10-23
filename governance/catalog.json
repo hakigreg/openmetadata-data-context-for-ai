@@ -1,0 +1,118 @@
+{
+  "domains": [
+    {
+      "name": "DigitalCommerce",
+      "displayName": "Digital Commerce",
+      "description": "Consumer-aligned domain responsible for trusted digital commerce analytics and AI-ready context.",
+      "domainType": "Consumer-aligned"
+    }
+  ],
+  "teams": [
+    {
+      "name": "CommerceAnalytics",
+      "displayName": "Commerce Analytics",
+      "description": "Cross-functional owner of governed digital commerce data products.",
+      "teamType": "Group",
+      "isJoinable": true
+    }
+  ],
+  "classifications": [
+    {
+      "name": "DataSensitivity",
+      "displayName": "Data Sensitivity",
+      "description": "Business-oriented sensitivity levels, independent of any regulatory framework.",
+      "mutuallyExclusive": true
+    }
+  ],
+  "tags": [
+    {
+      "classification": "DataSensitivity",
+      "name": "Public",
+      "displayName": "Public",
+      "description": "Information approved for unrestricted distribution."
+    },
+    {
+      "classification": "DataSensitivity",
+      "name": "Internal",
+      "displayName": "Internal",
+      "description": "Information intended for internal business use."
+    },
+    {
+      "classification": "DataSensitivity",
+      "name": "Confidential",
+      "displayName": "Confidential",
+      "description": "Information requiring controlled access because it can identify or materially affect a customer."
+    }
+  ],
+  "glossaries": [
+    {
+      "name": "Commerce",
+      "displayName": "Digital Commerce Glossary",
+      "description": "Shared business language for the digital media commerce use case."
+    }
+  ],
+  "glossaryTerms": [
+    {
+      "glossary": "Commerce",
+      "name": "Customer",
+      "displayName": "Customer",
+      "description": "A person or organization with an account that can purchase digital products."
+    },
+    {
+      "glossary": "Commerce",
+      "name": "CustomerIdentifier",
+      "displayName": "Customer Identifier",
+      "description": "A stable key used to distinguish one customer account from another.",
+      "parent": "Commerce.Customer"
+    },
+    {
+      "glossary": "Commerce",
+      "name": "DigitalProduct",
+      "displayName": "Digital Product",
+      "description": "A purchasable digital media item represented by a track in the source catalog."
+    },
+    {
+      "glossary": "Commerce",
+      "name": "Order",
+      "displayName": "Order",
+      "description": "A completed commerce transaction represented by an invoice and its line items."
+    },
+    {
+      "glossary": "Commerce",
+      "name": "Revenue",
+      "displayName": "Revenue",
+      "description": "Realized line amount calculated as sold quantity multiplied by unit price."
+    },
+    {
+      "glossary": "Commerce",
+      "name": "AverageOrderValue",
+      "displayName": "Average Order Value",
+      "description": "Total realized revenue divided by the number of distinct orders."
+    },
+    {
+      "glossary": "Commerce",
+      "name": "CustomerLifetimeValue",
+      "displayName": "Customer Lifetime Value",
+      "description": "Cumulative realized revenue attributed to a customer across the observed history."
+    }
+  ],
+  "dataProducts": [
+    {
+      "name": "CommerceInsights",
+      "displayName": "Commerce Insights",
+      "description": "Curated customer, sales, catalog, and executive KPI assets for analytics and AI consumers.",
+      "domains": ["DigitalCommerce"]
+    }
+  ],
+  "dataProductAssets": {
+    "DigitalCommerce.CommerceInsights": [
+      "digital_commerce_postgres.chinook.marts.dim_customers",
+      "digital_commerce_postgres.chinook.marts.dim_products",
+      "digital_commerce_postgres.chinook.marts.fct_sales",
+      "digital_commerce_postgres.chinook.marts.mart_customer_360",
+      "digital_commerce_postgres.chinook.marts.mart_sales_performance",
+      "digital_commerce_postgres.chinook.marts.mart_catalog_performance",
+      "digital_commerce_postgres.chinook.marts.mart_executive_kpis"
+    ]
+  }
+}

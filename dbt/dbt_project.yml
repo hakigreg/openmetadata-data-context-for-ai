@@ -1,0 +1,25 @@
+name: digital_commerce
+version: 1.0.0
+config-version: 2
+
+profile: digital_commerce
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: target
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  digital_commerce:
+    staging:
+      +schema: staging
+      +materialized: view
+      +tags: ["staging", "digital_commerce"]
+    intermediate:
+      +schema: intermediate
+      +materialized: view
+      +tags: ["intermediate", "digital_commerce"]
+    marts:
+      +schema: marts
+      +materialized: table
+      +tags: ["certified_candidate", "digital_commerce"]

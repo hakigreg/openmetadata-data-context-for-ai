@@ -1,0 +1,60 @@
+services:
+  analytics-postgres:
+    image: ${POSTGRES_IMAGE:-postgres:16.10-alpine}
+    environment:
+      POSTGRES_USER: ${COMMERCE_DB_USER:-commerce}
+      POSTGRES_PASSWORD: ${COMMERCE_DB_PASSWORD:-commerce}
+      POSTGRES_DB: postgres
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - track_activity_query_size=2048
+    ports:
+      - "${COMMERCE_DB_HOST_PORT:-55432}:5432"
+    volumes:
+      - commerce-db-data:/var/lib/postgresql/data
+      - ./data/chinook/Chinook_PostgreSql.sql:/docker-entrypoint-initdb.d/10-chinook.sql:ro
+      - ./data/chinook/20_extensions.sql:/docker-entrypoint-initdb.d/20-extensions.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${COMMERCE_DB_USER:-commerce} -d chinook"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - app_net
+
+  dbt:
+    build:
+      context: .
+      dockerfile: docker/dbt/Dockerfile
+      args:
+        DBT_CORE_VERSION: ${DBT_CORE_VERSION:-1.12.6}
+        DBT_POSTGRES_VERSION: ${DBT_POSTGRES_VERSION:-1.11.0}
+    working_dir: /workspace/dbt
+    environment:
+      DBT_PROFILES_DIR: /workspace/dbt
+      COMMERCE_DB_HOST: analytics-postgres
+      COMMERCE_DB_PORT: 5432
+      COMMERCE_DB_USER: ${COMMERCE_DB_USER:-commerce}
+      COMMERCE_DB_PASSWORD: ${COMMERCE_DB_PASSWORD:-commerce}
+      COMMERCE_DB_NAME: ${COMMERCE_DB_NAME:-chinook}
+    volumes:
+      - ./:/workspace
+    depends_on:
+      analytics-postgres:
+        condition: service_healthy
+    profiles: ["tools"]
+    networks:
+      - app_net
+
+  ingestion:
+    volumes:
+      - ./:/workspace:ro
+
+volumes:
+  commerce-db-data:
+
+networks:
+  app_net:

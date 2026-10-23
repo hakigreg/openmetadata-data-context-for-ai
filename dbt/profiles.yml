@@ -1,0 +1,13 @@
+digital_commerce:
+  target: local
+  outputs:
+    local:
+      type: postgres
+      host: "{{ env_var('COMMERCE_DB_HOST', 'localhost') }}"
+      port: "{{ env_var('COMMERCE_DB_PORT', '5432') | int }}"
+      user: "{{ env_var('COMMERCE_DB_USER', 'commerce') }}"
+      password: "{{ env_var('COMMERCE_DB_PASSWORD', 'commerce') }}"
+      dbname: "{{ env_var('COMMERCE_DB_NAME', 'chinook') }}"
+      schema: analytics
+      threads: 4
+      connect_timeout: 10

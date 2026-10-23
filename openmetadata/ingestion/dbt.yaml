@@ -1,0 +1,25 @@
+source:
+  type: dbt
+  serviceName: digital_commerce_postgres
+  sourceConfig:
+    config:
+      type: DBT
+      dbtConfigSource:
+        dbtConfigType: local
+        dbtCatalogFilePath: /workspace/dbt/target/catalog.json
+        dbtManifestFilePath: /workspace/dbt/target/manifest.json
+        dbtRunResultsFilePath: /workspace/dbt/target/run_results.json
+      dbtUpdateDescriptions: true
+      dbtUpdateOwners: true
+      includeTags: true
+      dbtClassificationName: DbtTags
+sink:
+  type: metadata-rest
+  config: {}
+workflowConfig:
+  loggerLevel: INFO
+  openMetadataServerConfig:
+    hostPort: http://openmetadata-server:8585/api
+    authProvider: openmetadata
+    securityConfig:
+      jwtToken: ${OPENMETADATA_JWT_TOKEN}

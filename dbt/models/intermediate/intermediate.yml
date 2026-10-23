@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: int_sales_enriched
+    description: Order lines enriched with order date, customer, and billing geography.
+    columns:
+      - name: sale_line_id
+        data_tests: [unique, not_null]
+      - name: invoice_id
+        data_tests: [not_null]
+      - name: customer_id
+        data_tests: [not_null]
+      - name: product_id
+        data_tests: [not_null]
+      - name: extended_amount
+        data_tests: [not_null]

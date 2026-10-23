@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Standardized customer records from the operational commerce system.
+    columns:
+      - name: customer_id
+        description: Stable identifier for a customer account.
+        data_tests: [unique, not_null]
+      - name: email
+        description: Normalized customer email used for account communications.
+        data_tests: [not_null]
+        tags: ["personal_data", "contact_data"]
+  - name: stg_invoices
+    description: Standardized order headers and billing geography.
+    columns:
+      - name: invoice_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: invoice_total
+        data_tests: [not_null]
+  - name: stg_invoice_lines
+    description: Standardized digital product order lines.
+    columns:
+      - name: invoice_line_id
+        data_tests: [unique, not_null]
+      - name: invoice_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_invoices')
+                field: invoice_id
+      - name: extended_amount
+        data_tests: [not_null]
+  - name: stg_tracks
+    description: Standardized digital track catalog.
+    columns:
+      - name: track_id
+        data_tests: [unique, not_null]
+  - name: stg_albums
+    description: Standardized album catalog.
+    columns:
+      - name: album_id
+        data_tests: [unique, not_null]
+  - name: stg_artists
+    description: Standardized artist catalog.
+    columns:
+      - name: artist_id
+        data_tests: [unique, not_null]
+  - name: stg_genres
+    description: Standardized genre reference data.
+    columns:
+      - name: genre_id
+        data_tests: [unique, not_null]

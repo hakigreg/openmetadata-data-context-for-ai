@@ -1,0 +1,12 @@
+.DS_Store
+.env
+.generated/
+artifacts/
+docker-volume/
+dbt/logs/
+dbt/target/
+dbt/dbt_packages/
+*.py[cod]
+__pycache__/
+.pytest_cache/
+.venv/

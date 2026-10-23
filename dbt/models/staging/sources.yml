@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  - name: chinook
+    description: Raw operational tables from the upstream Chinook digital media store fixture.
+    database: "{{ env_var('COMMERCE_DB_NAME', 'chinook') }}"
+    schema: public
+    tables:
+      - name: customer
+        description: Customer accounts and contact information.
+      - name: invoice
+        description: Commerce order headers, including billing geography and total amount.
+      - name: invoice_line
+        description: Order line items linking invoices to purchased tracks.
+      - name: track
+        description: Digital track catalog and unit pricing.
+      - name: album
+        description: Album catalog.
+      - name: artist
+        description: Artist catalog.
+      - name: genre
+        description: Product genre reference data.

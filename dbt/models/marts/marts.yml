@@ -1,0 +1,138 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: Governed customer dimension for digital commerce analytics.
+    config:
+      meta:
+        openmetadata:
+          domain: DigitalCommerce
+          tier: Tier.Tier1
+          owner: [CommerceAnalytics]
+          glossary: [Commerce.Customer]
+    columns:
+      - name: customer_id
+        description: Stable customer key.
+        data_tests: [unique, not_null]
+        meta:
+          openmetadata:
+            glossary: [Commerce.CustomerIdentifier]
+      - name: customer_name
+        description: Customer display name.
+        tags: ["personal_data"]
+      - name: email
+        description: Customer contact email.
+        tags: ["personal_data", "contact_data"]
+      - name: country
+        description: Customer country.
+  - name: dim_products
+    description: Governed digital product dimension combining tracks, albums, artists, and genres.
+    config:
+      meta:
+        openmetadata:
+          domain: DigitalCommerce
+          tier: Tier.Tier2
+          owner: [CommerceAnalytics]
+          glossary: [Commerce.DigitalProduct]
+    columns:
+      - name: product_id
+        description: Stable digital product key.
+        data_tests: [unique, not_null]
+      - name: product_name
+        description: Commercial track title.
+      - name: list_price
+        description: Catalog unit price in the source currency.
+  - name: fct_sales
+    description: Line-level digital commerce sales fact used as the governed analytical backbone.
+    config:
+      meta:
+        openmetadata:
+          domain: DigitalCommerce
+          tier: Tier.Tier1
+          owner: [CommerceAnalytics]
+          glossary: [Commerce.Order, Commerce.Revenue]
+    columns:
+      - name: sale_line_id
+        description: Stable order-line key.
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: product_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+      - name: revenue
+        description: Quantity multiplied by the realized unit price.
+        data_tests: [not_null]
+        meta:
+          openmetadata:
+            glossary: [Commerce.Revenue]
+  - name: mart_customer_360
+    description: Customer-level commercial behavior and lifetime value metrics.
+    config:
+      meta:
+        openmetadata:
+          domain: DigitalCommerce
+          tier: Tier.Tier1
+          owner: [CommerceAnalytics]
+          glossary: [Commerce.CustomerLifetimeValue]
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: lifetime_value
+        description: Total realized revenue attributed to a customer.
+        data_tests: [not_null]
+  - name: mart_sales_performance
+    description: Monthly sales performance by billing country.
+    config:
+      meta:
+        openmetadata:
+          domain: DigitalCommerce
+          tier: Tier.Tier1
+          owner: [CommerceAnalytics]
+          glossary: [Commerce.Revenue]
+    columns:
+      - name: sale_month
+        data_tests: [not_null]
+      - name: billing_country
+        data_tests: [not_null]
+      - name: revenue
+        data_tests: [not_null]
+  - name: mart_catalog_performance
+    description: Product-level commercial performance across the complete digital catalog.
+    config:
+      meta:
+        openmetadata:
+          domain: DigitalCommerce
+          tier: Tier.Tier2
+          owner: [CommerceAnalytics]
+          glossary: [Commerce.DigitalProduct, Commerce.Revenue]
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+      - name: revenue
+        data_tests: [not_null]
+  - name: mart_executive_kpis
+    description: Single-row executive summary of core digital commerce KPIs.
+    config:
+      meta:
+        openmetadata:
+          domain: DigitalCommerce
+          tier: Tier.Tier1
+          owner: [CommerceAnalytics]
+          glossary: [Commerce.Revenue, Commerce.AverageOrderValue]
+    columns:
+      - name: total_orders
+        data_tests: [not_null]
+      - name: total_revenue
+        data_tests: [not_null]
+      - name: average_order_value
+        data_tests: [not_null]

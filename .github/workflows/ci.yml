@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  contract-and-dbt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate repository contracts
+        run: python -m unittest discover -s tests -v
+
+      - name: Prepare and validate Compose
+        run: |
+          make setup
+          make compose-config
+
+      - name: Build and test dbt project
+        run: |
+          make dbt-build
+          make dbt-docs
+
+      - name: Stop test services
+        if: always()
+        run: make down

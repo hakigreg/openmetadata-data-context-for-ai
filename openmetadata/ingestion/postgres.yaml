@@ -1,0 +1,40 @@
+source:
+  type: postgres
+  serviceName: digital_commerce_postgres
+  serviceConnection:
+    config:
+      type: Postgres
+      username: ${COMMERCE_DB_USER}
+      authType:
+        password: ${COMMERCE_DB_PASSWORD}
+      hostPort: analytics-postgres:5432
+      database: chinook
+      ingestAllDatabases: false
+      sslMode: disable
+      connectionOptions: {}
+      connectionArguments: {}
+  sourceConfig:
+    config:
+      type: DatabaseMetadata
+      markDeletedTables: true
+      includeTables: true
+      includeViews: true
+      schemaFilterPattern:
+        includes:
+          - ^public$
+          - ^staging$
+          - ^intermediate$
+          - ^marts$
+        excludes:
+          - ^information_schema$
+          - ^pg_.*
+sink:
+  type: metadata-rest
+  config: {}
+workflowConfig:
+  loggerLevel: INFO
+  openMetadataServerConfig:
+    hostPort: http://openmetadata-server:8585/api
+    authProvider: openmetadata
+    securityConfig:
+      jwtToken: ${OPENMETADATA_JWT_TOKEN}
