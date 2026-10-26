@@ -4,7 +4,7 @@
 [![OpenMetadata](https://img.shields.io/badge/OpenMetadata-2.0.2-7147E8)](https://github.com/open-metadata/OpenMetadata/releases/tag/2.0.2-release)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A reproducible portfolio implementation of OpenMetadata that turns a small
+A reproducible implementation of OpenMetadata that turns a
 digital commerce warehouse into governed, AI-ready data context.
 
 The project is intentionally platform-led: Chinook provides representative
@@ -14,7 +14,7 @@ owned, classified, tested, and reusable by people and AI systems**.
 
 ## What this demonstrates
 
-- PostgreSQL metadata ingestion and profiling
+- Metadata ingestion and profiling
 - dbt descriptions, tests, tags, and table/column lineage
 - a consumer-aligned domain and an owned Data Product
 - business glossary terms connected to analytical assets
@@ -23,8 +23,6 @@ owned, classified, tested, and reusable by people and AI systems**.
 - an API-derived AI Context Pack that contains metadata, not customer rows
 - repeatable local setup for Apple Silicon and Intel hosts
 
-This positions the author as a **Data & AI Governance Architect who can design
-the operating model and implement the platform hands-on**.
 
 ## Architecture
 
@@ -70,7 +68,7 @@ explicit, reviewable decisions in version control.
 ## Implementation evidence
 
 These screenshots were captured from the running local implementation after a
-clean end-to-end build. They are not mockups or generated images.
+clean end-to-end build.
 
 ### Governed Data Product
 
