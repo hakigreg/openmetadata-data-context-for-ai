@@ -162,6 +162,7 @@ make dbt-docs              # generate dbt artifacts
 make dbt-test              # refresh executed test results after dbt docs
 make ingest-metadata       # ingest PostgreSQL metadata
 make governance-bootstrap  # create governance entities and Data Product
+make reindex-governance    # make domains and Data Products visible in Marketplace
 make ingest-dbt            # publish dbt lineage, tests, and documentation
 make reindex-tests         # make dbt test results visible in Data Quality
 make profile               # profile governed marts

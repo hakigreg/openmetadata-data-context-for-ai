@@ -7,7 +7,7 @@ OPENMETADATA_VERSION ?= 2.0.2
 OPENMETADATA_COMPOSE := .generated/openmetadata/docker-compose.yml
 COMPOSE := docker compose --project-directory . -f $(OPENMETADATA_COMPOSE) -f compose.yaml
 
-.PHONY: help setup compose-config up wait down reset dbt-build dbt-docs dbt-test ingest-metadata reindex-search ingest-dbt reindex-tests profile governance-bootstrap context-export token validate demo
+.PHONY: help setup compose-config up wait down reset dbt-build dbt-docs dbt-test ingest-metadata reindex-search ingest-dbt reindex-tests profile governance-bootstrap reindex-governance context-export token validate demo
 
 help:
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "%-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -74,11 +74,14 @@ profile: setup ## Profile governed marts and publish metrics to OpenMetadata
 governance-bootstrap: ## Idempotently create governance entities and curate the Data Product
 	@python3 scripts/openmetadata/bootstrap.py
 
+reindex-governance: ## Ensure domains and Data Products are visible in the Marketplace
+	@python3 scripts/openmetadata/reindex_governance.py
+
 context-export: ## Export an AI-ready context package from governed OpenMetadata assets
 	@python3 scripts/openmetadata/export_ai_context.py
 
 validate: compose-config ## Run fast, non-destructive project validation
 	@python3 -m unittest discover -s tests -v
 
-demo: up wait dbt-build dbt-docs dbt-test ingest-metadata reindex-search governance-bootstrap ingest-dbt reindex-tests profile context-export ## Build the end-to-end governed metadata demo
+demo: up wait dbt-build dbt-docs dbt-test ingest-metadata reindex-search governance-bootstrap reindex-governance ingest-dbt reindex-tests profile context-export ## Build the end-to-end governed metadata demo
 	@printf 'Base demo ready. Open http://localhost:8585\n'

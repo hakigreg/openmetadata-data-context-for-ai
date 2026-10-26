@@ -97,9 +97,23 @@ class ProjectContractTest(unittest.TestCase):
     def test_demo_reindexes_tables_before_dbt_ingestion(self) -> None:
         makefile = (ROOT / "Makefile").read_text()
         self.assertIn(
-            "ingest-metadata reindex-search governance-bootstrap ingest-dbt",
+            "ingest-metadata reindex-search governance-bootstrap "
+            "reindex-governance ingest-dbt",
             makefile,
         )
+
+    def test_demo_reindexes_governance_for_marketplace(self) -> None:
+        makefile = (ROOT / "Makefile").read_text()
+        self.assertIn(
+            "governance-bootstrap reindex-governance ingest-dbt",
+            makefile,
+        )
+        reindex_script = (
+            ROOT / "scripts" / "openmetadata" / "reindex_governance.py"
+        ).read_text()
+        self.assertIn("domain_search_index", reindex_script)
+        self.assertIn("data_product_search_index", reindex_script)
+        self.assertIn('"type": entity_type', reindex_script)
 
     def test_demo_preserves_and_indexes_executed_dbt_test_results(self) -> None:
         makefile = (ROOT / "Makefile").read_text()
