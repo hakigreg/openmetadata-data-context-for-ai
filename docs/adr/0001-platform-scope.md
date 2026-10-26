@@ -5,9 +5,8 @@
 
 ## Context
 
-The repository must demonstrate a credible, hands-on OpenMetadata
-implementation without combining the portfolio piece with a regulatory control
-framework. It should show Data Governance, Data Management, Data Privacy, and AI
+This repository demonstrates a hands-on OpenMetadata
+implementation. It shows Data Governance, Data Management, Data Privacy, and AI
 Governance capabilities while remaining easy to run and evaluate.
 
 ## Decision
@@ -27,7 +26,7 @@ OpenMetadata is the control plane for:
 
 The AI deliverable is a provider-neutral context package generated from the
 OpenMetadata API. A chatbot, vector database, and LLM integration are explicitly
-outside the initial scope.
+outside the current scope.
 
 ## Consequences
 
