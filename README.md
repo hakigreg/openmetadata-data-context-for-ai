@@ -23,6 +23,9 @@ owned, classified, tested, and reusable by people and AI systems**.
 - an API-derived AI Context Pack that contains metadata, not customer rows
 - repeatable local setup for Apple Silicon and Intel hosts
 
+For a concise, evidence-led evaluation, use the
+[project review guide](docs/project-review-guide.md). It supports both a
+repository-only review and optional live validation.
 
 ## Architecture
 
@@ -197,7 +200,7 @@ governance/catalog.json      declarative governance model
 openmetadata/ingestion/      metadata, dbt, and profiler workflows
 scripts/openmetadata/        API bootstrap and AI context export
 examples/ai-context/         versioned metadata-only output example
-docs/                        architecture decisions and demo guidance
+docs/                        architecture decisions and project review guide
 tests/                       repository contract tests
 ```
 
