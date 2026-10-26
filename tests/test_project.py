@@ -147,7 +147,7 @@ class ProjectContractTest(unittest.TestCase):
         ):
             self.assertIn(source, readme)
 
-    def test_portfolio_screenshots_are_real_jpeg_files(self) -> None:
+    def test_implementation_screenshots_are_real_jpeg_files(self) -> None:
         image_dir = ROOT / "docs" / "images"
         for name in (
             "data-product-overview.jpg",

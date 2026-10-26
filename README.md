@@ -206,10 +206,10 @@ tests/                       repository contract tests
 
 ## Scope and security
 
-This is a local portfolio environment, not a production deployment. It does not
-claim HIPAA, PCI DSS, or any other regulatory compliance. It demonstrates data
-privacy concepts through semantic classification without turning the project
-into a compliance implementation.
+This is a local reference implementation, not a production deployment. It does
+not claim HIPAA, PCI DSS, or any other regulatory compliance. It demonstrates
+data privacy concepts through semantic classification without turning the
+project into a compliance implementation.
 
 All host-accessible services bind to the loopback interface. The platform
 database and search engine remain available only inside the Docker network.
